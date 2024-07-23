@@ -5,5 +5,6 @@ Este projeto é um conversor de moedas desenvolvido em Python, utilizando a bibl
 ## Requisitos
 
 - Python 3.9+
-- Docker
-- Docker Compose
+- customtkinter
+- requests
+- python-dotenv
