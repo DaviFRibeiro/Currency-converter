@@ -1,0 +1,51 @@
+# Ignore arquivos de ambiente
+.env
+
+# Ignore pastas e arquivos gerados pelo Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore pastas e arquivos gerados pela build
+build/
+dist/
+*.egg-info/
+.eggs/
+develop-eggs/
+parts/
+sdist/
+wheels/
+share/python-wheels/
+MANIFEST
+
+# Ignore arquivos e pastas gerados por IDEs
+.vscode/
+.idea/
+
+# Ignore arquivos específicos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+
+# Ignore arquivos temporários
+*.tmp
+*.swp
+
+# Ignore binários compilados
+*.so
+*.dll
+*.dylib
+
+# Ignore ambientes virtuais
+.venv/
+.virtenv/
+.env/
+
+# Ignore bibliotecas instaladas localmente
+lib/
+lib64/
+local/
+site-packages/
