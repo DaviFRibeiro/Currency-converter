@@ -41,8 +41,13 @@ def on_convert():
             rate = data[f"{base_currency}{target_currency}"]['bid']
             converted_amount = amount * float(rate)
             result_label.configure(text=f"Resultado: {converted_amount:.2f} {target_currency}")
+            
+            # Atualizar a data e hora da consulta
+            api_date = data[f"{base_currency}{target_currency}"]['create_date']
+            api_data_label.configure(text=f"Data da consulta: {api_date}")
         else:
             result_label.configure(text="Erro: Dados não encontrados.")
+            api_data_label.configure(text="")
     else:
         messagebox.showerror("Erro", "Por favor, selecione as moedas e insira o valor.")
 
