@@ -8,3 +8,4 @@ Este projeto é um conversor de moedas desenvolvido em Python, utilizando a bibl
 - customtkinter
 - requests
 - python-dotenv
+- matplotlib
