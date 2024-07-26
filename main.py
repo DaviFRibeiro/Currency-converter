@@ -4,6 +4,9 @@ from tkinter import messagebox
 from dotenv import load_dotenv
 import os
 from typing import List
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import datetime
 
 # Carregar variáveis de ambiente do arquivo .env
 load_dotenv()
@@ -23,6 +26,13 @@ def update_exchange_rate(base_currency: str, target_currency: str) -> dict:
     response = requests.get(url)
     data = response.json()
     print("Debug - Data received from API:", data)  # Adiciona mensagem de depuração
+    return data
+
+# Função para obter histórico de taxas de câmbio
+def get_exchange_rate_history(base_currency: str, target_currency: str) -> List[dict]:
+    url = f"https://economia.awesomeapi.com.br/json/daily/{base_currency}-{target_currency}/30"
+    response = requests.get(url)
+    data = response.json()
     return data
 
 # Função chamada ao clicar no botão
@@ -45,11 +55,44 @@ def on_convert():
             # Atualizar a data e hora da consulta
             api_date = data[f"{base_currency}{target_currency}"]['create_date']
             api_data_label.configure(text=f"Data da consulta: {api_date}")
+            
+            # Obter e plotar o histórico da taxa de câmbio
+            history_data = get_exchange_rate_history(base_currency, target_currency)
+            plot_exchange_rate_history(history_data)
         else:
             result_label.configure(text="Erro: Dados não encontrados.")
             api_data_label.configure(text="")
     else:
         messagebox.showerror("Erro", "Por favor, selecione as moedas e insira o valor.")
+
+# Função para plotar o histórico da taxa de câmbio
+def plot_exchange_rate_history(history_data):
+    dates = []
+    rates = []
+    for item in history_data:
+        try:
+            timestamp = int(item['timestamp'])
+            date = datetime.datetime.fromtimestamp(timestamp)
+            rate = float(item['bid'])
+            dates.append(date)
+            rates.append(rate)
+        except (ValueError, KeyError) as e:
+            print(f"Erro ao processar dados de histórico: {e}")
+            continue
+    
+    if dates and rates:
+        fig, ax = plt.subplots(figsize=(8, 5))
+        ax.plot(dates, rates, marker='o')
+        ax.set_title('Histórico da Taxa de Câmbio')
+        ax.set_xlabel('Data')
+        ax.set_ylabel('Taxa de Câmbio')
+        
+        canvas = FigureCanvasTkAgg(fig, master=app)
+        canvas.draw()
+        canvas.get_tk_widget().pack(pady=5)
+        
+        ax.xaxis.set_major_formatter(plt.FixedFormatter(dates))
+        plt.gcf().autofmt_xdate()
 
 # Criar a janela principal
 app = ctk.CTk()
@@ -59,14 +102,14 @@ ctk.set_default_color_theme("dark-blue")
 
 # Definir título, tamanho e cor da janela
 app.title("Conversor de Moedas")
-app.geometry("600x600")
+app.geometry("800x900")
 app.configure(bg='black')  # Alterado para preto
 
 # Criar variáveis para armazenar as moedas selecionadas
 base_currency_var = ctk.StringVar()
 target_currency_var = ctk.StringVar()
 
-titulo = ctk.CTkLabel(app, text="Conversor de Moedas", font=("",20))
+titulo = ctk.CTkLabel(app, text="Conversor de Moedas", font=("", 20))
 titulo.pack(pady=20)
 
 # Criar widgets
