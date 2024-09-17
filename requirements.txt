@@ -1,3 +1,5 @@
 customtkinter
 requests
 python-dotenv
+matplotlib
+
